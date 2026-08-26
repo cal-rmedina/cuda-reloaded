@@ -165,13 +165,13 @@ __global__ void invert_color_kernel(unsigned char* d_pixel,
 int main() {
 
     // 
-    constexpr int image_width = 1<<13;      // 8192x8192 px per image
-    constexpr int block_width = 1<<10;      // 1024x1024 px per block
-    constexpr int threads = 1<<8;           // threads per thread-block
+    constexpr unsigned int image_width = 1<<13;      // 8192x8192 px per image
+    constexpr unsigned int block_width = 1<<10;      // 1024x1024 px per block
+    constexpr unsigned int threads = 1<<8;           // threads per thread-block
 
-    constexpr int total_pixels = image_width * image_width;
-    constexpr int blocks_x = image_width / block_width;
-    constexpr int total_blocks = blocks_x * blocks_x;
+    constexpr unsigned int total_pixels = image_width * image_width;
+    constexpr unsigned int blocks_x = image_width / block_width;
+    constexpr unsigned int total_blocks = blocks_x * blocks_x;
 
     // Get device properties
     cudaDeviceProp prop;
