@@ -6,6 +6,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+
+// Ignore this function (Image initialization)
 void filling_square_image_chessboard_pattern_block_width(
     const int image_width,
     const int block_width,
@@ -36,6 +38,7 @@ void filling_square_image_chessboard_pattern_block_width(
     }
 }
 
+// Ignore this function (Test for the output image)
 void test_chessboard_inverted_colors(const int image_width,
                                      const int block_width,
                                      const unsigned char* d_pixel)
@@ -72,7 +75,7 @@ void test_chessboard_inverted_colors(const int image_width,
     free(h_pixel);
 }
 
-// TODO:
+// DISCUSS:
 //  What is the atomic operation doing? 
 //  Is the 1D array an easy way to address each pixel?
 //  Is there any better way to accumulate values? 
@@ -103,9 +106,8 @@ __global__ void block_cumulative_kernel(const unsigned char *d_pixel,
     }
 }
 
-// TODO:
+// DISCUSS:
 //  Is the thread-per-pixel approach the optimal?
-//  How many times is the division / pixels_per_block computed?
 __global__ void assign_average_block_kernel(unsigned char* d_pixel,
                                             const int* d_block_average,
                                             const int image_width,
@@ -126,14 +128,14 @@ __global__ void assign_average_block_kernel(unsigned char* d_pixel,
         const int block_1d_id = block_y * blocks_x + block_x;
         const int pixels_per_block = block_width * block_width;
 
-        // Computing block average divining by the number of pixels per block
+        // Computing block average dividing by the number of pixels per block
         const int block_value = d_block_average[block_1d_id] / pixels_per_block;
 
         d_pixel[thread_1d_id] = static_cast<unsigned char>(block_value);
     }
 }
 
-// TODO:
+// DISCUSS:
 //  Is the thread-per-pixel approach the optimal?
 __global__ void round_color_kernel(unsigned char* d_pixel,
                                    const int image_width)
@@ -148,8 +150,8 @@ __global__ void round_color_kernel(unsigned char* d_pixel,
 }
 
 // TODO:
-//  Is the thread-per-pixel approach the optimal?
 //  Can we combine invert_color_kernel and round_color_kernel?
+//  Do we need a 2nd array if we want to keep the output of the rounded image?
 __global__ void invert_color_kernel(unsigned char* d_pixel,
                                     const int image_width)
 {
