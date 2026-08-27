@@ -13,7 +13,7 @@ __global__ void global_id_kernel(const unsigned int elements,
     unsigned int* d_array_id) {
 
     const unsigned int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-        d_array_id[tid] = tid;
+    d_array_id[tid] = tid;
 }
 
 // TODO 0: Run the program, check 1st kernel lauch, modify to see output
@@ -55,7 +55,7 @@ int main() {
 //         Are all the elements of the array covered?
 //         Are we accessing elements out of bounds?
 //
-// Change the number of elements to 1000000, modify if needed to work
+// Change the number of elements to 1000016, modify if needed to work
 // regardless the array size
 //
 //         Are there idle threads after the kernel modification?
