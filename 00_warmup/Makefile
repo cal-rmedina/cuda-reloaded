@@ -1,12 +1,10 @@
 CXX = nvcc
-#COMP_SANI_FLAG = -lineinfo
-#CUDA_LIBRARY = -lcuda
-#NVFLAGS = -Wno-deprecated-declarations 
+CUDA_GDB_FLAGS = -g -G
 
 NAME = main
 
 $(NAME): $(NAME).cu
-	$(CXX) $(COMP_SANI_FLAG) $(CUDA_LIBRARY) $(NVFLAGS) $< -o $@ 
+	$(CXX) $(CUDA_GDB_FLAGS) $< -o $@
 
 .PHONY: clean
 clean:
