@@ -4,6 +4,7 @@
 #include <cuda_runtime.h>
 #include <cooperative_groups.h>
 
+// Ignore this function (Image initialization)
 void filling_square_image_chessboard_pattern_block_width(
     const int image_width,
     const int block_width,
@@ -69,7 +70,7 @@ void test_cumulative_blocks(const int image_width,
     free(block_average_temp);
 }
 
-
+// Ignore this function (Test for the output image)
 void test_chessboard_colors(const int image_width,
                             const int block_width,
                             const bool inverted,
@@ -184,6 +185,34 @@ __global__ void block_cumulative_multi_read_kernel(
     }
 }
 
+
+// BONUS 2: Once you finish you can play loading multiple elements per thread, modify the next example
+__device__ __forceinline__ unsigned int load_sum_20_bits_uchar4(
+    const unsigned char* __restrict__ d_pixel,
+    unsigned int initial_row_pixel) {
+
+    // 4‑byte load (uchar4)
+    const auto p0 = *reinterpret_cast<const uchar4*>(d_pixel + initial_row_pixel);      // 0-3
+    const auto p1 = *reinterpret_cast<const uchar4*>(d_pixel + initial_row_pixel + 4);  // 4-7
+    const auto p2 = *reinterpret_cast<const uchar4*>(d_pixel + initial_row_pixel + 8);  // 8-11
+    const auto p3 = *reinterpret_cast<const uchar4*>(d_pixel + initial_row_pixel + 12); // 12-15
+    const auto p4 = *reinterpret_cast<const uchar4*>(d_pixel + initial_row_pixel + 16); // 16-19
+
+    unsigned int sum = 0;
+    sum += p0.x + p0.y + p0.z + p0.w;
+    sum += p1.x + p1.y + p1.z + p1.w;
+    sum += p2.x + p2.y + p2.z + p2.w;
+    sum += p3.x + p3.y + p3.z + p3.w;
+    sum += p4.x + p4.y + p4.z + p4.w;
+
+    return sum;
+}
+
+// TODO : With the help of the previous exercise,
+// combine this kernel with the round_color and invert_color ones.
+
+// BONUS 1: Could one thread write multiple elements at the same time ?
+// the same way we did it with the multiple read kernel
 __global__ void assign_average_block_kernel(unsigned char* d_pixel,
                                             const int* d_block_average,
                                             const int image_width,
@@ -288,12 +317,12 @@ int main()
     // Rounding the color to either black or white depending on average value
     round_color_kernel<<<blocks_covering_pixels, threads>>>(d_pixel, image_width);
 
-    // TEST: avoiding OpenCV functions, check array colors
+    // TEST: check array colors
     test_chessboard_colors(image_width, block_width, false, d_pixel);
 
     invert_color_kernel<<<blocks_covering_pixels, threads>>>(d_pixel, image_width);
 
-    // TEST: avoiding OpenCV functions, check array inverted colors
+    // TEST: check array inverted colors
     test_chessboard_colors(image_width, block_width, true, d_pixel);
 
     cudaFree(d_pixel);

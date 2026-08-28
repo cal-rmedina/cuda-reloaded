@@ -1,14 +1,14 @@
 CXX = nvcc
-COMP_SANI_FLAG = -lineinfo
+#COMP_SANI_FLAG = -lineinfo
+CUDA_GDB_FLAGS = -g -G
 
-NVFLAGS = -Wno-deprecated-declarations -gencode arch=compute_89,code=compute_89 -lcuda
 OPENCV_CFLAGS := $(shell pkg-config --cflags opencv4)
 OPENCV_LIBS   := $(shell pkg-config --libs opencv4)
 
 NAME = main
 
 $(NAME): $(NAME).cu
-	$(CXX) $(REDUCTION_FLAG) $(THREAD_FLAG) $(COMP_SANI_FLAG) $(NVFLAGS) $(OPENCV_CFLAGS) $< -o $@ $(OPENCV_LIBS)
+	$(CXX) $(COMP_SANI_FLAG) $(CUDA_GDB_FLAGS) $(OPENCV_CFLAGS) $< -o $@ $(OPENCV_LIBS)
 
 .PHONY: clean
 clean:

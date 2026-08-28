@@ -1,13 +1,11 @@
-# Export CUDA path
-# export PATH := /usr/local/cuda/bin:$(PATH)
-
 CXX = nvcc
+#COMP_SANI_FLAG = -lineinfo
+CUDA_GDB_FLAGS = -g -G
 
-NVFLAGS =-arch=sm_75 -lineinfo -Xptxas -v
 NAME = main
 
 $(NAME): $(NAME).cu
-	$(CXX) $(NVFLAGS) $< -o $@
+	$(CXX) $(CUDA_GDB_FLAGS) $(COMP_SANI_FLAG) $< -o $@
 
 .PHONY: clean
 

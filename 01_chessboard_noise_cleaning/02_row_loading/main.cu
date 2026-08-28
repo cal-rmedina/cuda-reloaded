@@ -122,8 +122,6 @@ __global__ void row_loop_per_thread_kernel(
 
         unsigned int sum = load_sum_20_bits_int(d_pixel, initial_row_pixel);
 
-//        unsigned int sum = load_sum_20_bits_uchar4(d_pixel, initial_row_pixel);
-
         check_row_sum(sum, block_width);
     }
 }
